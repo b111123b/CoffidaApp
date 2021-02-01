@@ -14,9 +14,10 @@ class Login extends Component {
             email: '',
             password: '',
             buttonStyle: "#0000ff",
-            // activePage: this.props.activePage,
-            // user: this.props.user,
-            // changePage: this.props.changePage
+            loggedIn: false,
+            isLoading: false,
+            authToken: ""
+
         }
     }
     
@@ -29,14 +30,28 @@ class Login extends Component {
         this.setState({password: password})
     }
 
-    handleLoginButtonClick = () => {
-        // probably send off post request
-        let colour = this.state.buttonStyle == "#ffc0cb" ? "#0000ff" : "#ffc0cb";
-        this.setState({buttonStyle: colour})
-        // if(this.state.email === this.state.user.email && this.state.password === this.state.user.password){
-        //     this.state.changeLoginPage();
-        // }
-        // console.log("page: "+this.state.activePage)
+    attemptLogin = async () => {
+        const navigation = this.props.navigation;
+        try {
+            const response = await fetch('http://10.0.2.2:3333/api/1.0.0/user/login', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: this.state.email, password: this.state.password })
+            });
+            const responseData = await response.json();
+            const token = responseData.token;
+            const id = responseData.id;
+            console.log("token: " + token);
+            console.log("id: " + id);
+            this.setState({authToken:token});
+            navigation.navigate('Home');
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
     }
 
     render(){
@@ -49,12 +64,12 @@ class Login extends Component {
                 <Button
                     title="login Button"
                     color={this.state.buttonStyle}
-                    onPress={this.handleLoginButtonClick}
+                    onPress={this.attemptLogin}
                 
                 />
                 <Button
-                    title="navigation"
-                    onPress={() => navigation.navigate('Navigation')}
+                    title="Register"
+                    onPress={() => navigation.navigate('Register')}
                 />
 
                 

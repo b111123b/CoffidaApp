@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 
 
-const Navigation = () => {
+const Home = () => {
     return (
       <Text style={styles.baseText}>
-        I am bold
-        <Text style={styles.innerText}> and red</Text>
+        This is the 
+        <Text style={styles.innerText}> Home page</Text>
       </Text>
     );
   };
@@ -26,4 +26,4 @@ const Navigation = () => {
     }
 });
 
-export default Navigation;
+export default Home;
