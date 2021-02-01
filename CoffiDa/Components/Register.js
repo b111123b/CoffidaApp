@@ -19,10 +19,12 @@ const Register = () => {
   
   const styles = StyleSheet.create({
     baseText: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontSize: 70
     },
     innerText: {
-      color: 'red'
+      color: 'red',
+      fontSize: 70
     }
 });
 

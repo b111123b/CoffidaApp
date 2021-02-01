@@ -5,7 +5,7 @@ import {
   Button
 } from 'react-native';
 
-class Login extends Component {
+export default class Login extends Component {
 
     constructor(props) {
         super(props);
@@ -13,10 +13,9 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            buttonStyle: "#0000ff",
             loggedIn: false,
             isLoading: false,
-            authToken: ""
+            authToken: this.props.authToken
 
         }
     }
@@ -31,6 +30,7 @@ class Login extends Component {
     }
 
     attemptLogin = async () => {
+        console.log("auth: "+ this.state.authToken);
         const navigation = this.props.navigation;
         try {
             const response = await fetch('http://10.0.2.2:3333/api/1.0.0/user/login', {
@@ -43,11 +43,9 @@ class Login extends Component {
             });
             const responseData = await response.json();
             const token = responseData.token;
-            const id = responseData.id;
             console.log("token: " + token);
-            console.log("id: " + id);
             this.setState({authToken:token});
-            navigation.navigate('Home');
+            navigation.navigate('Home', { authToken: this.state.authToken });
         } catch (error) {
             console.log("error: " + error);
             alert(error);
@@ -79,4 +77,3 @@ class Login extends Component {
     }
 }
 
-export default Login;
