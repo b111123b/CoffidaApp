@@ -13,34 +13,51 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            buttonStyle: "#0000ff"
+            buttonStyle: "#0000ff",
+            // activePage: this.props.activePage,
+            // user: this.props.user,
+            // changePage: this.props.changePage
         }
     }
     
-
     handleEmailChange = (email) => {
-        // do something here
         this.setState({email: email})
+        
     }
 
     handlePasswordChange = (password) => {
-        // do something here
         this.setState({password: password})
     }
 
     handleLoginButtonClick = () => {
-        // do something here
         // probably send off post request
         let colour = this.state.buttonStyle == "#ffc0cb" ? "#0000ff" : "#ffc0cb";
         this.setState({buttonStyle: colour})
+        // if(this.state.email === this.state.user.email && this.state.password === this.state.user.password){
+        //     this.state.changeLoginPage();
+        // }
+        // console.log("page: "+this.state.activePage)
     }
 
     render(){
+
+        const navigation = this.props.navigation;
         return (
             <View>
-                <TextInput placeholder="Enter your email" onChange={this.handleEmailChange} value={this.state.email} />
-                <TextInput placeholder="Enter your password" onChange={this.handlePasswordChange} value={this.state.password} />
-                <Button title="button" color={this.state.buttonStyle} onPress={this.handleLoginButtonClick}>login</Button>
+                <TextInput placeholder="Enter your email" onChangeText={this.handleEmailChange} value={this.state.email} />
+                <TextInput placeholder="Enter your password" onChangeText={this.handlePasswordChange} value={this.state.password} />
+                <Button
+                    title="login Button"
+                    color={this.state.buttonStyle}
+                    onPress={this.handleLoginButtonClick}
+                
+                />
+                <Button
+                    title="navigation"
+                    onPress={() => navigation.navigate('Navigation')}
+                />
+
+                
             </View>
 
         );
