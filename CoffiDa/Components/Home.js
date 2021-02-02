@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {
-  View,
-  TextInput,
-  Button,
   StyleSheet,
   Text,
-  ScrollView
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity 
 } from 'react-native';
 
 export default class Home extends Component {
@@ -14,63 +13,72 @@ export default class Home extends Component {
         super(props);
 
         this.state = {
-            authToken: this.props.authToken
+            items: []
         }
     }
 
-    // componentDidMount () {
-    //     // console.log("authToken: " + route.params.authToken);
-    //     try {
-    //         const response = fetch('http://10.0.2.2:3333/api/1.0.0/find', {
-    //             method: 'GET',
-    //             headers: {
-    //                 'X-Authorization': '2443c1f277d27823190e49fcfcb19c37'
-    //             }
-    //         });
-    //         //const responseData = response.json();
-    //         console.log("responceData: " + response);
-    //         console.log(response);
+    getData = async () =>{
+        const route = this.props.route;
+        try {
+            let response = await fetch('http://10.0.2.2:3333/api/1.0.0/find', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
 
-    //     } catch (error) {
-    //         console.log("error: " + error);
-    //         alert(error);
-    //     } 
-    // }
+            let responseData = await response.json();
+            this.setState({items: responseData});
+
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
+    componentDidMount () {
+        this.getData();
+    }
 
     render() {
-        let longText = "";
+        const renderItem = ({item}) => (
+            <TouchableOpacity style={styles.item}>
+                <Text style={styles.title}>{item.location_name}</Text>
+                <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
+                <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
+                <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
+            </TouchableOpacity >
+        )
+        
         return (
-            <ScrollView>
-                <Text style={styles.baseText}>
-                    This is the 
-                    <Text style={styles.innerText}>
-                        Home page
-                    </Text>
-                </Text>
-                <Text style={styles.scrollText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in
-                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.
-                </Text>
-            </ScrollView>
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    data={this.state.items}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.location_id.toString()}
+                />
+            </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    baseText: {
-        fontWeight: 'bold',
-        fontSize: 70
+    item: {
+      padding: 20,
+      marginVertical: 8,
+      marginHorizontal: 16,
+      backgroundColor: '#80a1c1',
     },
-    innerText: {
-        color: 'red',
-        fontSize: 70
+    title: {
+      fontSize: 32,
+      color: '#a85219'
     },
-    scrollText: {
-        fontSize: 30
+    subTitle: {
+        // color: 'white'
+    },
+    container: {
+        backgroundColor: '#d9cfc1',
     }
-})
+  });
+  

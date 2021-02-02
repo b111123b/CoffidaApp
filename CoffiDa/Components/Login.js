@@ -30,7 +30,6 @@ export default class Login extends Component {
     }
 
     attemptLogin = async () => {
-        console.log("auth: "+ this.state.authToken);
         const navigation = this.props.navigation;
         try {
             const response = await fetch('http://10.0.2.2:3333/api/1.0.0/user/login', {
@@ -43,8 +42,7 @@ export default class Login extends Component {
             });
             const responseData = await response.json();
             const token = responseData.token;
-            console.log("token: " + token);
-            this.setState({authToken:token});
+            this.setState({authToken: token});
             navigation.navigate('Home', { authToken: this.state.authToken });
         } catch (error) {
             console.log("error: " + error);

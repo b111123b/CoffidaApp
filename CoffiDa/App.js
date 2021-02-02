@@ -26,11 +26,12 @@ class App extends Component {
         super(props);
 
         this.state = {
-            authToken: ""
+            authToken: "test"
         }
     }
 
     render(){
+        // console.log("props: "+ this.state.authToken);
 
         let user = {
             email:'123',
@@ -41,6 +42,7 @@ class App extends Component {
                 <MainStack.Navigator headerMode="none">
                     <MainStack.Screen name="Login" component={LoginScreen} />
                     <MainStack.Screen name="Home" component={Home} />
+                    {/* <MainStack.Screen name="Home" {props} */}
                 </MainStack.Navigator>
             </NavigationContainer>
         );
