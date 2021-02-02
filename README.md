@@ -1,1 +1,1 @@
-# CoffidaApp
+# Coffida
