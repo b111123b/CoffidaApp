@@ -15,9 +15,9 @@ const Register = () => {
         <Text style={styles.innerText}> Register page</Text>
       </Text>
     );
-  };
+};
   
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     baseText: {
       fontWeight: 'bold',
       fontSize: 70

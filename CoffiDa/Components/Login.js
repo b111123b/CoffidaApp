@@ -11,8 +11,8 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            email: '',
-            password: '',
+            email: 'safwan@gmail.com',
+            password: 'hello123',
             loggedIn: false,
             isLoading: false,
             authToken: this.props.authToken

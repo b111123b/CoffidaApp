@@ -8,6 +8,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './Components/Login';
 import Home from './Components/Home';
 import Register from './Components/Register';
+import Item from './Components/ListItem';
+import Review from './Components/Review';
 
 const MainStack = createStackNavigator();
 const LoginStack = createStackNavigator();
@@ -22,27 +24,14 @@ function LoginScreen() {
   }
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            authToken: "test"
-        }
-    }
-
     render(){
-        // console.log("props: "+ this.state.authToken);
-
-        let user = {
-            email:'123',
-            password:'456'
-        };
         return(
             <NavigationContainer>
                 <MainStack.Navigator headerMode="none">
                     <MainStack.Screen name="Login" component={LoginScreen} />
                     <MainStack.Screen name="Home" component={Home} />
-                    {/* <MainStack.Screen name="Home" {props} */}
+                    <MainStack.Screen name="Item" component={Item} />
+                    <MainStack.Screen name="Review" component={Review} />
                 </MainStack.Navigator>
             </NavigationContainer>
         );

@@ -13,7 +13,8 @@ export default class Home extends Component {
         super(props);
 
         this.state = {
-            items: []
+            items: [],
+            authToken: ''
         }
     }
 
@@ -30,6 +31,7 @@ export default class Home extends Component {
 
             let responseData = await response.json();
             this.setState({items: responseData});
+            this.setState({authToken: route.params.authToken});
 
         } catch (error) {
             console.log("error: " + error);
@@ -42,8 +44,17 @@ export default class Home extends Component {
     }
 
     render() {
+
         const renderItem = ({item}) => (
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity 
+                style={styles.item}
+                onPress={() => {
+                    this.props.navigation.navigate('Item',
+                        { item: item },
+                        { authToken: this.state.authToken }
+                    );
+                }}
+                >
                 <Text style={styles.title}>{item.location_name}</Text>
                 <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
                 <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
@@ -75,10 +86,10 @@ const styles = StyleSheet.create({
       color: '#a85219'
     },
     subTitle: {
-        // color: 'white'
+        fontSize: 18,
     },
     container: {
         backgroundColor: '#d9cfc1',
     }
-  });
+});
   
