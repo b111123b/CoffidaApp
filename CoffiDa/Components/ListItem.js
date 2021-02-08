@@ -7,7 +7,8 @@ import {
     Image,
     FlatList,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    Button
 } from 'react-native'
 
 export default class ListItem extends Component {
@@ -16,7 +17,7 @@ export default class ListItem extends Component {
         super(props);
 
         this.state = {
-            item: [],
+            item: '',
             renderStuff: false
         }
     }
@@ -34,8 +35,8 @@ export default class ListItem extends Component {
 
             let responseData = await response.json();
             this.setState({item: responseData});
-            this.setState({renderStuff: true});
-            console.log('responseData: '+ responseData.location_reviews[0].review_body);
+            //this.setState({renderStuff: true});
+            // console.log('responseData: '+ responseData.location_reviews[0].review_body);
 
         } catch (error) {
             console.log("error: " + error);
@@ -53,15 +54,27 @@ export default class ListItem extends Component {
 
     render() {
         let item = this.state.item;
-        let location_reviews = item.location_reviews;
-        // this.state.renderStuff ?  : null;
+        let reviews = item.location_reviews;
 
-        const renderReview = ({review}) => (
-            <TouchableOpacity style={styles.item}>
-                <Text style={styles.subTitle}>review_body: {review.review_body}</Text>
-                <Text style={styles.subTitle}>price_rating: {review.price_rating}</Text>
+        //make onPress for reviews that lets you like them of edit them
+        //also add like counter with heart icon or something
+        const renderReview = ({item}) => (
+            <TouchableOpacity
+            style={styles.item}
+            >
+                <Text style={styles.title}>Overall Score: {item.overall_rating} </Text>
+                <Text style={styles.subTitle}>Quality: {item.quality_rating} </Text>
+                <Text style={styles.subTitle}>Price rating: {item.price_rating} </Text>
+                <Text style={styles.subTitle}>Cleanliness Rating: {item.clenliness_rating} </Text>
+                <Text style={styles.subTitle}>{item.review_body} </Text>
             </TouchableOpacity >
         )
+
+        let reviewList = <FlatList
+        data={reviews}
+        renderItem={renderReview}
+        keyExtractor={(item) => item.review_id.toString()}
+    />
 
         return (
             <SafeAreaView style={styles.container}>
@@ -75,16 +88,12 @@ export default class ListItem extends Component {
                 <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
                 <Text style={styles.subTitle}>quality: {item.avg_quality_rating}</Text>
                 <Text style={styles.subTitle}>cleanliness: {item.avg_clenliness_rating}</Text>
-                <ScrollView style={styles.item}>
-                    <Text>
-                        {this.state.renderStuff ? location_reviews : null}
-                    </Text>
-                </ScrollView>
-                {/* <FlatList
-                    data={location_reviews}
-                    renderItem={renderReview}
-                    keyExtractor={(review) => review.review_id.toString()}
-                /> */}
+                <Button
+                    title="leave review"
+                    onPress={() => {this.props.navigation.navigate('Review');}}
+                   //make this link to review page and have that post review
+                />
+                {reviewList}
             </SafeAreaView>
         )
     }
