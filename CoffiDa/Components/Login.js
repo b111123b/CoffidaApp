@@ -15,8 +15,8 @@ export default class Login extends Component {
             password: 'hello123',
             loggedIn: false,
             isLoading: false,
-            authToken: this.props.authToken,
-            userId: ''
+            authToken: this.props.authToken
+
         }
     }
     
@@ -42,13 +42,8 @@ export default class Login extends Component {
             });
             const responseData = await response.json();
             const token = responseData.token;
-            const id = responseData.id;
             this.setState({authToken: token});
-            this.setState({userId:id})
-            navigation.navigate('Home', 
-                {authToken: this.state.authToken},
-                {userId: this.state.userId}
-            );
+            navigation.navigate('Home', { authToken: this.state.authToken });
         } catch (error) {
             console.log("error: " + error);
             alert(error);

@@ -61,13 +61,8 @@ export default class Register extends Component {
             });
             const responseData = await response.json();
             const token = responseData.token;
-            const id = responseData.id;
             this.setState({authToken: token});
-            this.setState({userId:id})
-            navigation.navigate('Home', 
-                {authToken: this.state.authToken},
-                {userId: this.state.userId}
-            );
+            navigation.navigate('Home', { authToken: this.state.authToken });
         } catch (error) {
             console.log("error: " + error);
             alert(error);
