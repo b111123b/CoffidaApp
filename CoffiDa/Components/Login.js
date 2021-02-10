@@ -72,8 +72,6 @@ export default class Login extends Component {
                     title="Register"
                     onPress={() => navigation.navigate('Register')}
                 />
-
-                
             </View>
 
         );

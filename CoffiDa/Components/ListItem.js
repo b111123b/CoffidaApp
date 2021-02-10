@@ -71,10 +71,10 @@ export default class ListItem extends Component {
         )
 
         let reviewList = <FlatList
-        data={reviews}
-        renderItem={renderReview}
-        keyExtractor={(item) => item.review_id.toString()}
-    />
+            data={reviews}
+            renderItem={renderReview}
+            keyExtractor={(item) => item.review_id.toString()}
+        />
 
         return (
             <SafeAreaView style={styles.container}>

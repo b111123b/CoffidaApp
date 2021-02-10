@@ -35,7 +35,8 @@ export default class Register extends Component {
                     first_name: this.state.firstName,
                     last_name: this.state.lastName,
                     email: this.state.email,
-                    password: this.state.password })
+                    password: this.state.password
+                })
             });
             const responseData = await response.json();
             const id = responseData.id;
@@ -77,7 +78,6 @@ export default class Register extends Component {
 
     handleEmailChange = (email) => {
         this.setState({email: email})
-        
     }
 
     handlePasswordChange = (password) => {
@@ -95,15 +95,15 @@ export default class Register extends Component {
     render() {
         return (
             <View>
-            <TextInput placeholder="First Name" onChangeText={this.handleFirstNameChange} value={this.state.firstName}/>
-            <TextInput placeholder="Last Name" onChangeText={this.handleLastNameChange} value={this.state.lastName}/>
-            <TextInput placeholder="Email" onChangeText={this.handleEmailChange} value={this.state.email}/>
-            <TextInput placeholder="Password" onChangeText={this.handlePasswordChange} value={this.state.password}/>
-            <Button
-                title="Register"
-                onPress={this.attemptRegister}
-            />
-        </View>
+                <TextInput placeholder="First Name" onChangeText={this.handleFirstNameChange} value={this.state.firstName}/>
+                <TextInput placeholder="Last Name" onChangeText={this.handleLastNameChange} value={this.state.lastName}/>
+                <TextInput placeholder="Email" onChangeText={this.handleEmailChange} value={this.state.email}/>
+                <TextInput placeholder="Password" onChangeText={this.handlePasswordChange} value={this.state.password}/>
+                <Button
+                    title="Register"
+                    onPress={this.attemptRegister}
+                />
+            </View>
         );
     }
 }
