@@ -10,9 +10,11 @@ import Home from './Components/Home';
 import Register from './Components/Register';
 import Item from './Components/ListItem';
 import Review from './Components/Review';
+import User from './Components/User';
 
 const MainStack = createStackNavigator();
 const LoginStack = createStackNavigator();
+
 
 function LoginScreen() {
     return (
@@ -32,6 +34,7 @@ class App extends Component {
                     <MainStack.Screen name="Home" component={Home} />
                     <MainStack.Screen name="Item" component={Item} />
                     <MainStack.Screen name="Review" component={Review} />
+                    <MainStack.Screen name="User" component={User} />
                 </MainStack.Navigator>
             </NavigationContainer>
         );

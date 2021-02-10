@@ -15,8 +15,8 @@ export default class Login extends Component {
             password: 'hello123',
             loggedIn: false,
             isLoading: false,
-            authToken: this.props.authToken
-
+            authToken: '',
+            id: ''
         }
     }
     
@@ -42,8 +42,14 @@ export default class Login extends Component {
             });
             const responseData = await response.json();
             const token = responseData.token;
+            const userId = responseData.id;
+            console.log(userId);
             this.setState({authToken: token});
-            navigation.navigate('Home', { authToken: this.state.authToken });
+            this.setState({id: userId});
+            navigation.navigate('Home', {
+                authToken: this.state.authToken,
+                id: this.state.id
+            });
         } catch (error) {
             console.log("error: " + error);
             alert(error);
@@ -58,8 +64,7 @@ export default class Login extends Component {
                 <TextInput placeholder="Enter your email" onChangeText={this.handleEmailChange} value={this.state.email} />
                 <TextInput placeholder="Enter your password" onChangeText={this.handlePasswordChange} value={this.state.password} />
                 <Button
-                    title="login Button"
-                    color={this.state.buttonStyle}
+                    title="Login"
                     onPress={this.attemptLogin}
                 
                 />

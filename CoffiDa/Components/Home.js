@@ -4,7 +4,8 @@ import {
   Text,
   FlatList,
   SafeAreaView,
-  TouchableOpacity 
+  TouchableOpacity,
+  Button
 } from 'react-native';
 
 export default class Home extends Component {
@@ -14,7 +15,8 @@ export default class Home extends Component {
 
         this.state = {
             items: [],
-            authToken: ''
+            authToken: '',
+            id: ''
         }
     }
 
@@ -32,6 +34,7 @@ export default class Home extends Component {
             let responseData = await response.json();
             this.setState({items: responseData});
             this.setState({authToken: route.params.authToken});
+            this.setState({id: route.params.id});
 
         } catch (error) {
             console.log("error: " + error);
@@ -64,6 +67,13 @@ export default class Home extends Component {
         
         return (
             <SafeAreaView style={styles.container}>
+                <Button style={styles.bottomButton}
+                    title="User Page"
+                    onPress={() => this.props.navigation.navigate('User',{ 
+                        id: this.state.id,
+                        authToken: this.state.authToken }
+                    )}
+                />
                 <FlatList
                     data={this.state.items}
                     renderItem={renderItem}
@@ -90,6 +100,11 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#d9cfc1',
-    }
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 36
+      }
 });
   
