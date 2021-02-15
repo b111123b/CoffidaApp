@@ -51,12 +51,11 @@ export default class Home extends Component {
         const renderItem = ({item}) => (
             <TouchableOpacity 
                 style={styles.item}
-                onPress={() => {
-                    this.props.navigation.navigate('Item',
-                        { item: item },
-                        { authToken: this.state.authToken }
-                    );
-                }}
+                onPress={() => this.props.navigation.navigate('Item',{ 
+                        item: item,
+                        authToken: this.state.authToken
+                    })
+                }
                 >
                 <Text style={styles.title}>{item.location_name}</Text>
                 <Text style={styles.subTitle}>Locations: {item.location_town}</Text>

@@ -43,13 +43,13 @@ export default class Login extends Component {
             const responseData = await response.json();
             const token = responseData.token;
             const userId = responseData.id;
-            console.log(userId);
             this.setState({authToken: token});
             this.setState({id: userId});
             navigation.navigate('Home', {
                 authToken: this.state.authToken,
                 id: this.state.id
             });
+            console.log("authToken: " +token);
         } catch (error) {
             console.log("error: " + error);
             alert(error);

@@ -4,10 +4,8 @@ import {
     View,
     StyleSheet,
     SafeAreaView,
-    Image,
     FlatList,
     TouchableOpacity,
-    ScrollView,
     Button,
     TextInput
 } from 'react-native'
@@ -27,8 +25,39 @@ export default class User extends Component {
             email: '',
             password: '',
             firstName: '',
-            lastName: ''
+            lastName: '',
+            displayMode: 'reviews'
         }
+    }
+
+    onPressEditButton = () => {  
+        this.setState({ editable: !this.state.editable })  
+    }
+
+    handleEmailChange = (email) => {
+        this.setState({email: email})
+    }
+
+    handlePasswordChange = (password) => {
+        this.setState({password: password})
+    }
+
+    handleFirstNameChange = (firstName) => {
+        this.setState({firstName: firstName})
+    }
+
+    handleLastNameChange = (lastName) => {
+        this.setState({lastName: lastName})
+    }
+
+    onPressReviewButton = () => {  
+        this.setState({ displayMode: 'reviews' })  
+    }
+    onPressLocationButton = () => {  
+        this.setState({ displayMode: 'locations' })  
+    }
+    onPressLikedButton = () => {  
+        this.setState({ displayMode: 'liked reviews' })  
     }
 
     getUserData = async() => {
@@ -49,8 +78,6 @@ export default class User extends Component {
             this.setState({firstName: user.first_name});
             this.setState({lastName: user.last_name});
             this.setState({email: user.email});
-            console.log('responseData: '+responseData);
-
         } catch (error) {
             console.log("error: " + error);
             alert(error);
@@ -81,30 +108,6 @@ export default class User extends Component {
         }
     }
 
-    componentDidMount () {
-        this.getUserData();
-    }
-
-    onPressEditButton = () => {  
-        this.setState({ editable: !this.state.editable })  
-    }
-
-    handleEmailChange = (email) => {
-        this.setState({email: email})
-    }
-
-    handlePasswordChange = (password) => {
-        this.setState({password: password})
-    }
-
-    handleFirstNameChange = (firstName) => {
-        this.setState({firstName: firstName})
-    }
-
-    handleLastNameChange = (lastName) => {
-        this.setState({lastName: lastName})
-    }
-
     updateDetails = async() => {
         if (this.state.password==''){
             return(
@@ -114,7 +117,7 @@ export default class User extends Component {
         const route = this.props.route;
         let url = 'http://10.0.2.2:3333/api/1.0.0/user/'+route.params.id;
         try{
-            let response = await fetch(url, {
+            await fetch(url, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,8 +139,15 @@ export default class User extends Component {
         }
     }
 
+    componentDidMount () {
+        this.getUserData();
+    }
+
     render() {
         let user = this.state.user;
+        let reviews = user.reviews;
+        let locations = user.favourite_locations;
+        let likedReviews = user.liked_reviews
 
         let viewDetails = <View>
             <Text style={styles.title}>{user.first_name} </Text>
@@ -156,7 +166,44 @@ export default class User extends Component {
             title={this.state.editable ? 'Save changes': 'Edit'}
             onPress={this.state.editable ? this.updateDetails: this.onPressEditButton}
         />
-        console.log('editable: ' + this.state.editable)
+
+        const renderReview = ({item}) => (
+            <TouchableOpacity
+                style={styles.item}
+            >
+                <Text style={styles.title}>{item.location.location_name} </Text>
+                <Text style={styles.subTitle}>Overall Score: {item.review.overall_rating} </Text>
+                <Text style={styles.subTitle}>Quality: {item.review.quality_rating} </Text>
+                <Text style={styles.subTitle}>Price rating: {item.review.price_rating} </Text>
+                <Text style={styles.subTitle}>Cleanliness Rating: {item.review.clenliness_rating} </Text>
+                <Text style={styles.subTitle}>{item.review.review_body} </Text>
+            </TouchableOpacity >
+        )
+
+        const renderLocation = ({item}) => (
+            <TouchableOpacity
+                style={styles.item}
+            >
+                <Text style={styles.title}>{item.location_name}</Text>
+                <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
+                <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
+                <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
+            </TouchableOpacity >
+        )
+
+        let reviewList = <FlatList
+            data={this.state.displayMode === 'reviews' ? reviews : likedReviews}
+            renderItem={renderReview}
+            keyExtractor={(item) => item.review.review_id.toString()}
+        />
+
+        let locationList = <FlatList
+            data={locations}
+            renderItem={renderLocation}
+            keyExtractor={(item) => item.location_id.toString()}
+        />
+
+        // console.log(user.reviews[0]);
 
         return (
             <SafeAreaView style={styles.container}>
@@ -166,11 +213,24 @@ export default class User extends Component {
                     title="Logout"
                     onPress={this.logout}
                 />
+                <Button
+                    title="Reviews"
+                    onPress={this.onPressReviewButton}
+                />
+                <Button
+                    title="Favourtied locations"
+                    onPress={this.onPressLocationButton}
+                />
+                <Button
+                    title="liked reviews"  
+                    onPress={this.onPressLikedButton}
+                />
+                <Text style={styles.title}>{this.state.displayMode}</Text>
+                {this.state.displayMode === 'locations' ? locationList : reviewList}
             </SafeAreaView>
         )
     }
 }
-
 
 const styles = StyleSheet.create({
     item: {

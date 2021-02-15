@@ -18,13 +18,14 @@ export default class ListItem extends Component {
 
         this.state = {
             item: '',
-            renderStuff: false
+            authToken: ''
         }
     }
 
     getItemData = async () =>{
         const route = this.props.route;
         let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.item.location_id;
+        this.setState({authToken: route.params.authToken})
         try {
             let response = await fetch(url, {
                 method: 'GET',
@@ -35,8 +36,6 @@ export default class ListItem extends Component {
 
             let responseData = await response.json();
             this.setState({item: responseData});
-            //this.setState({renderStuff: true});
-            // console.log('responseData: '+ responseData.location_reviews[0].review_body);
 
         } catch (error) {
             console.log("error: " + error);
@@ -46,11 +45,15 @@ export default class ListItem extends Component {
 
     componentDidMount () {
         this.getItemData();
+
+        this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+            await this.getItemData();
+          });   
     }
 
-    testFunction () {
-        console.log('test'+this.state.item.location_reviews[0].review_body)
-    }
+    componentWillUnmount() {
+        this._unsubscribe();
+      }
 
     render() {
         let item = this.state.item;
@@ -90,7 +93,10 @@ export default class ListItem extends Component {
                 <Text style={styles.subTitle}>cleanliness: {item.avg_clenliness_rating}</Text>
                 <Button
                     title="leave review"
-                    onPress={() => {this.props.navigation.navigate('Review');}}
+                    onPress={() => {this.props.navigation.navigate('Review', {
+                            authToken: this.state.authToken,
+                            location_id: item.location_id
+                        });}}
                    //make this link to review page and have that post review
                 />
                 {reviewList}
@@ -98,7 +104,6 @@ export default class ListItem extends Component {
         )
     }
 }
-
 
 const styles = StyleSheet.create({
     item: {
