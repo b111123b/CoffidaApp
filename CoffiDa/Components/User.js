@@ -87,7 +87,7 @@ export default class User extends Component {
     logout = async() => {
         const route = this.props.route;
         try{
-            let response = await fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
+            await fetch('http://10.0.2.2:3333/api/1.0.0/user/logout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -48,12 +48,12 @@ export default class ListItem extends Component {
 
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
             await this.getItemData();
-          });   
+        });   
     }
 
     componentWillUnmount() {
         this._unsubscribe();
-      }
+    }
 
     render() {
         let item = this.state.item;
@@ -63,7 +63,7 @@ export default class ListItem extends Component {
         //also add like counter with heart icon or something
         const renderReview = ({item}) => (
             <TouchableOpacity
-            style={styles.item}
+                style={styles.item}
             >
                 <Text style={styles.title}>Overall Score: {item.overall_rating} </Text>
                 <Text style={styles.subTitle}>Quality: {item.quality_rating} </Text>

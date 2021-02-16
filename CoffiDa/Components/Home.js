@@ -5,7 +5,8 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
-  Button
+  Button,
+  Image
 } from 'react-native';
 
 export default class Home extends Component {
@@ -16,7 +17,9 @@ export default class Home extends Component {
         this.state = {
             items: [],
             authToken: '',
-            id: ''
+            id: '',
+            user: [],
+            favourites: []
         }
     }
 
@@ -42,25 +45,95 @@ export default class Home extends Component {
         }
     }
 
-    componentDidMount () {
-        this.getData();
+    getUserData = async() => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/user/'+route.params.id;
+        try{
+            let response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            let responseData = await response.json();
+            let user = responseData;
+            this.setState({user: user})
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
+    postFavourite = async(id) => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+id+'/favourite';
+        try{
+            await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            this.componentDidMount();
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
+    componentDidMount = async() => {
+        await this.getData();
+        await this.getUserData();
+        await this.getFavorites();
+
+        this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+            await this.getData();
+        });
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
+    }
+
+    getFavorites() {
+        let locations = this.state.user.favourite_locations;
+        let favourites = [];
+        locations.forEach(location => {
+            favourites.push(location.location_id);
+        })
+        this.setState({favourites: favourites})
     }
 
     render() {
 
+        let favouriteIcon = <Image
+            style={styles.image}
+            source={require('../coffee_icon.png')}
+        />
+
         const renderItem = ({item}) => (
+            
             <TouchableOpacity 
                 style={styles.item}
                 onPress={() => this.props.navigation.navigate('Item',{ 
                         item: item,
-                        authToken: this.state.authToken
+                        authToken: this.state.authToken,
+                        favourites: this.state.favourites
                     })
                 }
-                >
+                // onLongPress={
+                //     this.state.favourites.includes(item.location_id) 
+                //     ? () => this.postFavourite(item.location_id)
+                //     : null
+                // }
+            >
                 <Text style={styles.title}>{item.location_name}</Text>
                 <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
                 <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
                 <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
+                {this.state.favourites.includes(item.location_id) ? favouriteIcon: null}
             </TouchableOpacity >
         )
         
@@ -104,6 +177,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         marginBottom: 36
-      }
+    },
+    image: {
+        resizeMode: 'contain',
+        height: 50,
+        width: 50,
+        alignSelf: 'flex-end'
+    }
 });
   
