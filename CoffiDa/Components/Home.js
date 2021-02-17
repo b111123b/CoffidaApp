@@ -83,10 +83,29 @@ export default class Home extends Component {
         }
     }
 
+    deleteFavourite = async(id) => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+id+'/favourite';
+        try{
+            await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            this.componentDidMount();
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
     componentDidMount = async() => {
         await this.getData();
         await this.getUserData();
         await this.getFavorites();
+        await this.getLikedReviews();
 
         this._unsubscribe = this.props.navigation.addListener('focus', async () => {
             await this.getData();
@@ -103,7 +122,16 @@ export default class Home extends Component {
         locations.forEach(location => {
             favourites.push(location.location_id);
         })
-        this.setState({favourites: favourites})
+        this.setState({favourites: favourites});
+    }
+
+    getLikedReviews() {
+        let reviews = this.state.user.liked_reviews;
+        let likedReviews = [];
+        reviews.forEach(review => {
+            likedReviews.push(review.review.review_id);
+        })
+        this.setState({likedReviews: likedReviews});
     }
 
     render() {
@@ -118,16 +146,17 @@ export default class Home extends Component {
             <TouchableOpacity 
                 style={styles.item}
                 onPress={() => this.props.navigation.navigate('Item',{ 
-                        item: item,
+                        itemId: item.location_id,
                         authToken: this.state.authToken,
-                        favourites: this.state.favourites
+                        favourites: this.state.favourites,
+                        likedReviews: this.state.likedReviews
                     })
                 }
-                // onLongPress={
-                //     this.state.favourites.includes(item.location_id) 
-                //     ? () => this.postFavourite(item.location_id)
-                //     : null
-                // }
+                onLongPress={
+                    this.state.favourites.includes(item.location_id) 
+                    ? () => this.deleteFavourite(item.location_id)
+                    : () => this.postFavourite(item.location_id)
+                }
             >
                 <Text style={styles.title}>{item.location_name}</Text>
                 <Text style={styles.subTitle}>Locations: {item.location_town}</Text>

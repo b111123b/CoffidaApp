@@ -18,13 +18,14 @@ export default class ListItem extends Component {
 
         this.state = {
             item: '',
-            authToken: ''
+            authToken: '',
+            likedReviews: []
         }
     }
 
     getItemData = async () =>{
         const route = this.props.route;
-        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.item.location_id;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.itemId;
         this.setState({authToken: route.params.authToken})
         try {
             let response = await fetch(url, {
@@ -36,7 +37,51 @@ export default class ListItem extends Component {
 
             let responseData = await response.json();
             this.setState({item: responseData});
+            this.setState({likedReviews: route.params.likedReviews});
 
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
+    postReviewLike = async(id) => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.itemId+'/review/'+id+'/like'
+        try{
+            await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            let liked = this.state.likedReviews;
+            liked.push(id);
+            this.setState({likedReviews: liked})
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
+    deleteReviewLike = async(id) => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.itemId+'/review/'+id+'/like'
+        try{
+            await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            let liked = this.state.likedReviews;
+            console.log("before: "+this.state.likedReviews);
+            let index = liked.indexOf(id);
+            liked.splice(index,1);
+            this.setState({likedReviews: liked});
+            console.log("after: "+liked);
         } catch (error) {
             console.log("error: " + error);
             alert(error);
@@ -59,17 +104,26 @@ export default class ListItem extends Component {
         let item = this.state.item;
         let reviews = item.location_reviews;
 
-        //make onPress for reviews that lets you like them of edit them
-        //also add like counter with heart icon or something
+        let heartIcon = <Image
+            style={styles.icon}
+            source={require('../heart_icon.png')}
+        />
+
         const renderReview = ({item}) => (
             <TouchableOpacity
                 style={styles.item}
+                onPress={
+                    this.state.likedReviews.includes(item.review_id) 
+                    ? () => this.deleteReviewLike(item.review_id)
+                    : () => this.postReviewLike(item.review_id)
+                }
             >
                 <Text style={styles.title}>Overall Score: {item.overall_rating} </Text>
                 <Text style={styles.subTitle}>Quality: {item.quality_rating} </Text>
                 <Text style={styles.subTitle}>Price rating: {item.price_rating} </Text>
                 <Text style={styles.subTitle}>Cleanliness Rating: {item.clenliness_rating} </Text>
                 <Text style={styles.subTitle}>{item.review_body} </Text>
+                {this.state.likedReviews.includes(item.review_id) ? heartIcon: null}
             </TouchableOpacity >
         )
 
@@ -86,7 +140,7 @@ export default class ListItem extends Component {
                     style={styles.image}
                     source={require('../image_placeholder.png')}
                 />
-                <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
+                <Text style={styles.subTitle}>Location: {item.location_town}</Text>
                 <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
                 <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
                 <Text style={styles.subTitle}>quality: {item.avg_quality_rating}</Text>
@@ -126,6 +180,14 @@ const styles = StyleSheet.create({
     image: {
         display: 'flex',
         marginLeft: 'auto',
-        marginRight: 'auto'
+        marginRight: 'auto',
+        height: 100,
+        width: 120
+    },
+    icon: {
+        resizeMode: 'contain',
+        height: 50,
+        width: 50,
+        alignSelf: 'flex-end'
     }
 });

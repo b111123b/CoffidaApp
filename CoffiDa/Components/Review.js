@@ -48,7 +48,6 @@ export default class Review extends Component {
 
     postReview = async() => {
         const route = this.props.route;
-        console.log(route.params.authToken)
         let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review';
         console.log('url: '+url);
         try{
@@ -75,16 +74,17 @@ export default class Review extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <TextInput placeholder="Overall Rating" onChangeText={this.handleOverallChange} value={this.state.overall}/>
                 <TextInput placeholder="Price Ratiing" onChangeText={this.handlePriceChange} value={this.state.price}/>
                 <TextInput placeholder="Quality Rating" onChangeText={this.handleQualityChange} value={this.state.quality}/>
                 <TextInput placeholder="Cleanliness Rating" onChangeText={this.handleCleanChange} value={this.state.clean}/>
                 <TextInput
+                    style={styles.body}
                     placeholder="Write comment here"
                     onChangeText={this.handleBodyChange}
                     value={this.state.body}
-                    numberOfLines={4}
+                    numberOfLines={5}
                 />
                 <Button
                     title="Post Review"

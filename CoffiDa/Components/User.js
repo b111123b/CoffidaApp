@@ -109,11 +109,6 @@ export default class User extends Component {
     }
 
     updateDetails = async() => {
-        if (this.state.password==''){
-            return(
-                alert('Please enter a password')
-            );
-        }
         const route = this.props.route;
         let url = 'http://10.0.2.2:3333/api/1.0.0/user/'+route.params.id;
         try{
@@ -183,6 +178,11 @@ export default class User extends Component {
         const renderLocation = ({item}) => (
             <TouchableOpacity
                 style={styles.item}
+                // onPress={() => this.props.navigation.navigate('Item',{ 
+                //         item: item,
+                //         authToken: this.state.authToken
+                //     })
+                // }
             >
                 <Text style={styles.title}>{item.location_name}</Text>
                 <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
@@ -202,8 +202,6 @@ export default class User extends Component {
             renderItem={renderLocation}
             keyExtractor={(item) => item.location_id.toString()}
         />
-
-        // console.log(user.reviews[0]);
 
         return (
             <SafeAreaView style={styles.container}>
