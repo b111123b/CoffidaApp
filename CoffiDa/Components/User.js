@@ -136,6 +136,14 @@ export default class User extends Component {
 
     componentDidMount () {
         this.getUserData();
+
+        this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+            await this.getUserData();
+        });   
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
     }
 
     render() {
@@ -165,6 +173,14 @@ export default class User extends Component {
         const renderReview = ({item}) => (
             <TouchableOpacity
                 style={styles.item}
+                onPress={() => this.props.navigation.navigate('Review',{ 
+                        authToken: this.state.authToken,
+                        location_id: item.location.location_id,
+                        editReview: true,
+                        review: item.review,
+                        review_id: item.review.review_id
+                    })
+                }
             >
                 <Text style={styles.title}>{item.location.location_name} </Text>
                 <Text style={styles.subTitle}>Overall Score: {item.review.overall_rating} </Text>

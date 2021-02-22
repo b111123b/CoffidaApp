@@ -18,6 +18,8 @@ export default class Review extends Component {
             clean: '',
             quality: '',
             body: '',
+            editReview: false,
+            location_id: ''
         }
     }
 
@@ -41,9 +43,22 @@ export default class Review extends Component {
         this.setState({ body: body });  
     }
 
+    setPageStateEdit = (review) => {
+        this.setState({overall: String(review.overall_rating)});
+        this.setState({price: String(review.price_rating)});
+        this.setState({clean: String(review.clenliness_rating)});
+        this.setState({quality: String(review.quality_rating)});
+        this.setState({body: review.review_body});
+        // console.log('test: '+review.overall_rating);
+    }
+
     componentDidMount () {
         const route = this.props.route;
         this.setState({authToken: route.params.authToken});
+        this.setState({editReview: route.params.editReview});
+        this.setState({location_id: route.params.location_id});
+
+        route.params.editReview ? this.setPageStateEdit(route.params.review) : null;
     }
 
     postReview = async() => {
@@ -72,7 +87,69 @@ export default class Review extends Component {
         }
     }
 
+    updateReview = async() => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review/'+route.params.review_id;
+        try{
+            await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                },
+                body: JSON.stringify({
+                    overall_rating: Number(this.state.overall),
+                    price_rating: Number(this.state.price),
+                    quality_rating: Number(this.state.quality),
+                    clenliness_rating: Number(this.state.clean),
+                    review_body: this.state.body
+                })
+            });
+            this.props.navigation.goBack();
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
+    deleteReview = async() => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review/'+route.params.review_id;
+        try{
+            await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            this.props.navigation.goBack();
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
     render() {
+
+        let postButton = <Button
+            title="Post Review"
+            onPress={this.postReview}
+        />
+        let editButton = <Button
+            title="Edit Review"
+            onPress={this.updateReview}
+        />
+        let deleteButton = <Button
+            title="delete Review"
+            onPress={this.deleteReview}
+        />
+
+        let editControls = <View>
+            {editButton}
+            {deleteButton}
+        </View>
+        
         return (
             <View style={styles.container}>
                 <TextInput placeholder="Overall Rating" onChangeText={this.handleOverallChange} value={this.state.overall}/>
@@ -86,10 +163,7 @@ export default class Review extends Component {
                     value={this.state.body}
                     numberOfLines={5}
                 />
-                <Button
-                    title="Post Review"
-                    onPress={this.postReview}
-                />
+                {this.state.editReview === true ? editControls : postButton}
             </View> 
         )
     }

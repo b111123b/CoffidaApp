@@ -77,11 +77,9 @@ export default class ListItem extends Component {
                 }
             });
             let liked = this.state.likedReviews;
-            console.log("before: "+this.state.likedReviews);
             let index = liked.indexOf(id);
             liked.splice(index,1);
             this.setState({likedReviews: liked});
-            console.log("after: "+liked);
         } catch (error) {
             console.log("error: " + error);
             alert(error);
