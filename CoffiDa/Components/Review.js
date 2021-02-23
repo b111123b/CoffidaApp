@@ -49,7 +49,16 @@ export default class Review extends Component {
         this.setState({clean: String(review.clenliness_rating)});
         this.setState({quality: String(review.quality_rating)});
         this.setState({body: review.review_body});
-        // console.log('test: '+review.overall_rating);
+    }
+
+    checkBody () {
+        let body = this.state.body;
+        let profanity = ['tea','Tea','TEA','cake','CAKE','cakes','Pastry','pastry']
+        let failed = false;
+        profanity.forEach(word => {
+            if (body.includes(word) === true){failed = true;}
+        })
+        return failed;
     }
 
     componentDidMount () {
@@ -62,9 +71,9 @@ export default class Review extends Component {
     }
 
     postReview = async() => {
+        if (this.checkBody() === true){return(alert('body has profanity please remove'));}
         const route = this.props.route;
         let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review';
-        console.log('url: '+url);
         try{
             await fetch(url, {
                 method: 'POST',
@@ -88,6 +97,7 @@ export default class Review extends Component {
     }
 
     updateReview = async() => {
+        if (this.checkBody() === true){return(alert('body has profanity please remove'));}
         const route = this.props.route;
         let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review/'+route.params.review_id;
         try{
