@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import { 
     View,
     StyleSheet,
-    Button
+    Button,
+    Text,
+    TextInput,
+    Image
 } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler';
 
 export default class Review extends Component {
 
@@ -19,7 +21,9 @@ export default class Review extends Component {
             quality: '',
             body: '',
             editReview: false,
-            location_id: ''
+            location_id: '',
+            hasPhoto: false,
+            photo: null
         }
     }
 
@@ -68,6 +72,7 @@ export default class Review extends Component {
         this.setState({location_id: route.params.location_id});
 
         route.params.editReview ? this.setPageStateEdit(route.params.review) : null;
+        this.checkForPhoto();
     }
 
     postReview = async() => {
@@ -140,6 +145,48 @@ export default class Review extends Component {
         }
     }
 
+    checkForPhoto = async() => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review/'+route.params.review_id+'/photo';
+        try{
+            let response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            })
+            if (response.ok) {
+                this.setState({hasPhoto: true});
+                let myBlob = await response.blob();
+                // let photoURL = (URL || webkitURL).createObjectURL(myBlob);
+                this.setState({photo: myBlob});
+            } 
+        } catch (error) {
+            console.log("error: " + error);
+        }
+    }
+
+    deletePhoto = async() => {
+        const route = this.props.route;
+        let url = 'http://10.0.2.2:3333/api/1.0.0/location/'+route.params.location_id+'/review/'+route.params.review_id+'/photo';
+        try{
+            let response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Authorization': route.params.authToken
+                }
+            });
+            if (response.ok) {this.setState({hasPhoto: false});}
+            this.props.navigation.goBack();
+            alert("photo deleted");
+        } catch (error) {
+            console.log("error: " + error);
+            alert(error);
+        }
+    }
+
     render() {
 
         let postButton = <Button
@@ -157,6 +204,11 @@ export default class Review extends Component {
             onPress={this.deleteReview}
         />
 
+        let deletePhotoButton = <Button
+            title="delete Photo"
+            onPress={this.deletePhoto}
+        />
+
         let enableCameraButton = <Button
             title="Add Photo"
             onPress={() => this.props.navigation.navigate('Camera',{ 
@@ -166,11 +218,19 @@ export default class Review extends Component {
             })}
         />
 
+        let photoIndicator = <Text>Has Photo</Text>
+
         let editControls = <View>
             {editButton}
             {deleteButton}
-            {enableCameraButton}
+            {this.state.hasPhoto === true ? deletePhotoButton : enableCameraButton}
+            {/* {this.state.hasPhoto === true ? photoIndicator : null} */}
         </View>
+
+        let photo = <Image
+            style={styles.image}
+            source={this.state.photo}
+        />
 
         return (
             <View style={styles.container}>
@@ -187,6 +247,7 @@ export default class Review extends Component {
                         numberOfLines={5}
                     />
                     {this.state.editReview === true ? editControls : postButton}
+                    {photo}
                 </View>
             </View> 
         )
