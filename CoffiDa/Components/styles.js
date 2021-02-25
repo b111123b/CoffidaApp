@@ -1,3 +1,51 @@
+/* eslint-disable import/prefer-default-export */
+import { StyleSheet } from 'react-native';
+
+export const Styles = StyleSheet.create({
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    backgroundColor: '#80a1c1',
+  },
+  title: {
+    fontSize: 32,
+    color: '#a85219',
+  },
+  subTitle: {
+    fontSize: 18,
+  },
+  container: {
+    backgroundColor: '#d9cfc1',
+    flex: 1,
+    width: '100%',
+  },
+  itemImage: {
+    display: 'flex',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  image: {
+    resizeMode: 'contain',
+    height: 50,
+    width: 50,
+    alignSelf: 'flex-end',
+  },
+  icon: {
+    resizeMode: 'contain',
+    height: 50,
+    width: 50,
+    alignSelf: 'flex-end',
+  },
+});
+
+// export { Styles as default };
+
 /* CSS HEX */
 /* --windsor-tan: #a85219ff;
 --air-superiority-blue: #80a1c1ff;
