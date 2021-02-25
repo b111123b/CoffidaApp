@@ -146,34 +146,48 @@ export default class Review extends Component {
             title="Post Review"
             onPress={this.postReview}
         />
+
         let editButton = <Button
             title="Edit Review"
             onPress={this.updateReview}
         />
+
         let deleteButton = <Button
             title="delete Review"
             onPress={this.deleteReview}
         />
 
+        let enableCameraButton = <Button
+            title="Add Photo"
+            onPress={() => this.props.navigation.navigate('Camera',{ 
+                authToken: this.state.authToken,
+                location_id: this.props.route.params.location_id,
+                review_id: this.props.route.params.review_id
+            })}
+        />
+
         let editControls = <View>
             {editButton}
             {deleteButton}
+            {enableCameraButton}
         </View>
-        
+
         return (
             <View style={styles.container}>
-                <TextInput placeholder="Overall Rating" onChangeText={this.handleOverallChange} value={this.state.overall}/>
-                <TextInput placeholder="Price Ratiing" onChangeText={this.handlePriceChange} value={this.state.price}/>
-                <TextInput placeholder="Quality Rating" onChangeText={this.handleQualityChange} value={this.state.quality}/>
-                <TextInput placeholder="Cleanliness Rating" onChangeText={this.handleCleanChange} value={this.state.clean}/>
-                <TextInput
-                    style={styles.body}
-                    placeholder="Write comment here"
-                    onChangeText={this.handleBodyChange}
-                    value={this.state.body}
-                    numberOfLines={5}
-                />
-                {this.state.editReview === true ? editControls : postButton}
+                <View>
+                    <TextInput placeholder="Overall Rating" onChangeText={this.handleOverallChange} value={this.state.overall}/>
+                    <TextInput placeholder="Price Ratiing" onChangeText={this.handlePriceChange} value={this.state.price}/>
+                    <TextInput placeholder="Quality Rating" onChangeText={this.handleQualityChange} value={this.state.quality}/>
+                    <TextInput placeholder="Cleanliness Rating" onChangeText={this.handleCleanChange} value={this.state.clean}/>
+                    <TextInput
+                        style={styles.body}
+                        placeholder="Write comment here"
+                        onChangeText={this.handleBodyChange}
+                        value={this.state.body}
+                        numberOfLines={5}
+                    />
+                    {this.state.editReview === true ? editControls : postButton}
+                </View>
             </View> 
         )
     }
@@ -195,11 +209,17 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#d9cfc1',
-        flex: 1
+        flex: 1,
+        width: '100%'
     },
     image: {
         display: 'flex',
         marginLeft: 'auto',
         marginRight: 'auto'
+    },
+    preview: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center'
     }
 });
