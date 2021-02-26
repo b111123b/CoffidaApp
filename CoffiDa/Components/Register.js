@@ -1,9 +1,11 @@
+/* eslint-disable global-require */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
 // destructuirng the navigation prop gave weird promise warnings
 import React, { Component } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Text, Image, TouchableOpacity } from 'react-native';
+import { Styles as styles } from './styles';
 
 export default class Register extends Component {
   constructor(props) {
@@ -97,35 +99,59 @@ export default class Register extends Component {
 
   render() {
     return (
-      <View>
-        <TextInput
-          placeholder="First Name"
-          onChangeText={this.handleFirstNameChange}
-          value={this.state.firstName}
+      <View style={styles.container}>
+        <Image
+          style={styles.centerImage}
+          source={require('../coffee_icon.png')}
         />
-        <TextInput
-          placeholder="Last Name"
-          onChangeText={this.handleLastNameChange}
-          value={this.state.lastName}
-        />
-        <TextInput
-          placeholder="Email"
-          onChangeText={this.handleEmailChange}
-          value={this.state.email}
-        />
-        <TextInput
-          placeholder="Password"
-          onChangeText={this.handlePasswordChange}
-          value={this.state.password}
-          secureTextEntry
-        />
-        <TextInput
-          placeholder="Password (again)"
-          onChangeText={this.handleSecondPasswordChange}
-          value={this.state.passwordRepeat}
-          secureTextEntry
-        />
-        <Button title="Register" onPress={this.attemptRegister} />
+        <View style={styles.inputView}>
+          <TextInput
+            placeholder="First Name"
+            style={styles.TextInput}
+            onChangeText={this.handleFirstNameChange}
+            value={this.state.firstName}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Last Name"
+            onChangeText={this.handleLastNameChange}
+            value={this.state.lastName}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Email"
+            onChangeText={this.handleEmailChange}
+            value={this.state.email}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Password"
+            onChangeText={this.handlePasswordChange}
+            value={this.state.password}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Repeat Password"
+            onChangeText={this.handleSecondPasswordChange}
+            value={this.state.passwordRepeat}
+            secureTextEntry
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={this.attemptRegister}
+        >
+          <Text style={styles.btnText}>REGISTER</Text>
+        </TouchableOpacity>
       </View>
     );
   }

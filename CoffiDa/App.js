@@ -19,7 +19,7 @@ const LoginStack = createStackNavigator();
 
 function LoginScreen() {
   return (
-    <LoginStack.Navigator>
+    <LoginStack.Navigator headerMode="none">
       <LoginStack.Screen name="Login" component={LoginPage} />
       <LoginStack.Screen name="Register" component={Register} />
     </LoginStack.Navigator>

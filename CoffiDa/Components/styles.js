@@ -1,29 +1,62 @@
+/* eslint-disable max-len */
 /* eslint-disable import/prefer-default-export */
 import { StyleSheet } from 'react-native';
+/* --windsor-tan: #a85219;
+--air-superiority-blue: #80a1c1;
+--medium-champagne: #eee3ab;
+--bone: #d9cfc1;
+--bistre: #2b2118; */
+
+const tan = '#a85219';
+const blue = '#80a1c1';
+const bone = '#d9cfc1';
+const champagne = '#eee3ab';
+const bistre = '#2b2118';
+const white = '#ffffff';
 
 export const Styles = StyleSheet.create({
   item: {
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-    backgroundColor: '#80a1c1',
+    backgroundColor: bone,
   },
   title: {
     fontSize: 32,
-    color: '#a85219',
+    color: bistre,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  itemTitle: {
+    fontSize: 32,
+    color: bistre,
+    marginBottom: 20,
+  },
+  itemIcon: {
+    flex: 2,
   },
   subTitle: {
     fontSize: 18,
   },
+  locationDetails: {
+    fontSize: 18,
+    marginLeft: 18,
+  },
   container: {
-    backgroundColor: '#d9cfc1',
+    backgroundColor: white,
     flex: 1,
     width: '100%',
+  },
+  itemContainer: {
+    flexDirection: 'row',
   },
   itemImage: {
     display: 'flex',
     marginLeft: 'auto',
     marginRight: 'auto',
+    height: 150,
+    resizeMode: 'contain',
+    marginBottom: 10,
   },
   preview: {
     flex: 1,
@@ -35,6 +68,8 @@ export const Styles = StyleSheet.create({
     height: 50,
     width: 50,
     alignSelf: 'flex-end',
+    justifyContent: 'flex-end',
+    marginLeft: 100,
   },
   icon: {
     resizeMode: 'contain',
@@ -42,16 +77,70 @@ export const Styles = StyleSheet.create({
     width: 50,
     alignSelf: 'flex-end',
   },
+  centerImage: {
+    marginBottom: 40,
+    marginTop: 40,
+    alignSelf: 'center',
+    height: 150,
+    width: 150,
+  },
+  inputView: {
+    backgroundColor: bone,
+    borderRadius: 30,
+    width: '70%',
+    height: 45,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  bodyView: {
+    backgroundColor: bone,
+    borderRadius: 30,
+    width: '70%',
+    height: 85,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  TextInput: {
+    height: 50,
+    flex: 1,
+    padding: 10,
+    marginLeft: 20,
+  },
+  TextInputPassword: {
+    height: 50,
+    flex: 1,
+    padding: 10,
+    marginLeft: 20,
+  },
+  loginBtn: {
+    width: '80%',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    backgroundColor: tan,
+  },
+  reviewBtn: {
+    width: '70%',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: tan,
+  },
+  btnText: {
+    fontSize: 18,
+  },
+  reviewImage: {
+    height: 100,
+    resizeMode: 'contain',
+  },
 });
-
-// export { Styles as default };
-
-/* CSS HEX */
-/* --windsor-tan: #a85219ff;
---air-superiority-blue: #80a1c1ff;
---medium-champagne: #eee3abff;
---bone: #d9cfc1ff;
---bistre: #2b2118ff; */
 
 /* CSS HSL */
 /* --windsor-tan: hsla(24, 74%, 38%, 1);

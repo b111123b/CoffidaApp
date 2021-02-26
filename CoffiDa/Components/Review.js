@@ -2,7 +2,7 @@
 /* eslint-disable no-alert */
 // destructuirng the navigation prop gave weird promise warnings
 import React, { Component } from 'react';
-import { View, Button, TextInput } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { Styles as styles } from './styles';
 
 export default class Review extends Component {
@@ -153,9 +153,6 @@ export default class Review extends Component {
       });
       if (response.ok) {
         this.setState({ hasPhoto: true });
-        // const myBlob = await response.blob();
-        // let photoURL = (URL || webkitURL).createObjectURL(myBlob);
-        // this.setState({ photo: myBlob });
       }
     } catch (error) {
       console.log(`error: ${error}`);
@@ -219,23 +216,33 @@ export default class Review extends Component {
     } = this.state;
 
     const { route } = this.props;
-    const postButton = <Button title="Post Review" onPress={this.postReview} />;
+    const postButton = (
+      <TouchableOpacity style={styles.loginBtn} onPress={this.postReview}>
+        <Text style={styles.btnText}>Post Review</Text>
+      </TouchableOpacity>
+    );
 
     const editButton = (
-      <Button title="Edit Review" onPress={this.updateReview} />
+      <TouchableOpacity style={styles.loginBtn} onPress={this.updateReview}>
+        <Text style={styles.btnText}>Edit Review</Text>
+      </TouchableOpacity>
     );
 
     const deleteButton = (
-      <Button title="delete Review" onPress={this.deleteReview} />
+      <TouchableOpacity style={styles.loginBtn} onPress={this.deleteReview}>
+        <Text style={styles.btnText}>Delete Review</Text>
+      </TouchableOpacity>
     );
 
     const deletePhotoButton = (
-      <Button title="delete Photo" onPress={this.deletePhoto} />
+      <TouchableOpacity style={styles.loginBtn} onPress={this.deletePhoto}>
+        <Text style={styles.btnText}>Delete Photo</Text>
+      </TouchableOpacity>
     );
 
     const enableCameraButton = (
-      <Button
-        title="Add Photo"
+      <TouchableOpacity
+        style={styles.loginBtn}
         onPress={() =>
           // eslint-disable-next-line react/destructuring-assignment
           this.props.navigation.navigate('Camera', {
@@ -244,81 +251,68 @@ export default class Review extends Component {
             review_id: route.params.review_id,
           })
         }
-      />
+      >
+        <Text style={styles.btnText}>Add Photo</Text>
+      </TouchableOpacity>
     );
 
     const editControls = (
       <View>
         {editButton}
-        {deleteButton}
         {hasPhoto === true ? deletePhotoButton : enableCameraButton}
+        {deleteButton}
       </View>
     );
 
     return (
       <View style={styles.container}>
         <View>
-          <TextInput
-            placeholder="Overall Rating"
-            onChangeText={this.handleOverallChange}
-            value={overall}
-          />
-          <TextInput
-            placeholder="Price Ratiing"
-            onChangeText={this.handlePriceChange}
-            value={price}
-          />
-          <TextInput
-            placeholder="Quality Rating"
-            onChangeText={this.handleQualityChange}
-            value={quality}
-          />
-          <TextInput
-            placeholder="Cleanliness Rating"
-            onChangeText={this.handleCleanChange}
-            value={clean}
-          />
-          <TextInput
-            style={styles.body}
-            placeholder="Write comment here"
-            onChangeText={this.handleBodyChange}
-            value={body}
-            numberOfLines={5}
-          />
+          <Text style={styles.title}>Review Page</Text>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="Overall Rating"
+              onChangeText={this.handleOverallChange}
+              value={overall}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="Price Ratiing"
+              onChangeText={this.handlePriceChange}
+              value={price}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="Quality Rating"
+              onChangeText={this.handleQualityChange}
+              value={quality}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="Cleanliness Rating"
+              onChangeText={this.handleCleanChange}
+              value={clean}
+            />
+          </View>
+          <View style={styles.bodyView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="Write comment here"
+              onChangeText={this.handleBodyChange}
+              value={body}
+              numberOfLines={5}
+              multiline
+            />
+          </View>
           {editReview === true ? editControls : postButton}
         </View>
       </View>
     );
   }
 }
-
-// const styles = StyleSheet.create({
-//   item: {
-//     padding: 20,
-//     marginVertical: 8,
-//     marginHorizontal: 16,
-//     backgroundColor: '#80a1c1',
-//   },
-//   title: {
-//     fontSize: 32,
-//     color: '#a85219',
-//   },
-//   subTitle: {
-//     fontSize: 18,
-//   },
-//   container: {
-//     backgroundColor: '#d9cfc1',
-//     flex: 1,
-//     width: '100%',
-//   },
-//   image: {
-//     display: 'flex',
-//     marginLeft: 'auto',
-//     marginRight: 'auto',
-//   },
-//   preview: {
-//     flex: 1,
-//     justifyContent: 'flex-end',
-//     alignItems: 'center',
-//   },
-// });

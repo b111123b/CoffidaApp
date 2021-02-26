@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Button,
   Image,
+  View,
 } from 'react-native';
 import { Styles as styles } from './styles';
 
@@ -112,6 +113,7 @@ export default class Home extends Component {
         },
       });
       this.componentDidMount();
+      alert('Location added to favorites');
     } catch (error) {
       console.log(`error: ${error}`);
       alert(error);
@@ -130,6 +132,7 @@ export default class Home extends Component {
         },
       });
       this.componentDidMount();
+      alert('Location deleted from favorites');
     } catch (error) {
       console.log(`error: ${error}`);
       alert(error);
@@ -161,31 +164,42 @@ export default class Home extends Component {
             : () => this.postFavourite(item.location_id)
         }
       >
-        <Text style={styles.title}>{item.location_name}</Text>
-        <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
-        <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
-        <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
-        {favourites.includes(item.location_id) ? favouriteIcon : null}
+        <View style={styles.itemContainer}>
+          <View>
+            <Text style={styles.itemTitle}>{item.location_name}</Text>
+            <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
+            <Text style={styles.subTitle}>
+              Rating: {item.avg_overall_rating}
+            </Text>
+            <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
+          </View>
+          <View style={styles.itemIcon}>
+            {favourites.includes(item.location_id) ? favouriteIcon : null}
+          </View>
+        </View>
       </TouchableOpacity>
     );
 
     return (
       <SafeAreaView style={styles.container}>
-        <Button
-          style={styles.bottomButton}
-          title="User Page"
-          onPress={() =>
-            this.props.navigation.navigate('User', {
-              id,
-              authToken,
-            })
-          }
-        />
+        <Text style={styles.title}>Coffee Shops</Text>
         <FlatList
           data={items}
           renderItem={renderItem}
           keyExtractor={(item) => item.location_id.toString()}
         />
+        <View>
+          <Button
+            color="#a85219"
+            title="User Page"
+            onPress={() =>
+              this.props.navigation.navigate('User', {
+                id,
+                authToken,
+              })
+            }
+          />
+        </View>
       </SafeAreaView>
     );
   }

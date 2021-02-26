@@ -1,7 +1,9 @@
+/* eslint-disable global-require */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
 import React, { Component } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Image, Text, TouchableOpacity } from 'react-native';
+import { Styles as styles } from './styles';
 
 export default class Login extends Component {
   constructor(props) {
@@ -57,23 +59,38 @@ export default class Login extends Component {
     const { navigation } = this.props;
     const { email, password } = this.state;
     return (
-      <View>
-        <TextInput
-          placeholder="Enter your email"
-          onChangeText={this.handleEmailChange}
-          value={email}
+      <View style={styles.container}>
+        <Image
+          style={styles.centerImage}
+          source={require('../coffee_icon.png')}
         />
-        <TextInput
-          placeholder="Enter your password"
-          secureTextEntry
-          onChangeText={this.handlePasswordChange}
-          value={password}
-        />
-        <Button title="Login" onPress={this.attemptLogin} />
-        <Button
-          title="Register"
+        <Text style={styles.title}>CoffiDa</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Enter your email"
+            onChangeText={this.handleEmailChange}
+            value={email}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInputPassword}
+            placeholder="Enter your password"
+            secureTextEntry
+            onChangeText={this.handlePasswordChange}
+            value={password}
+          />
+        </View>
+        <TouchableOpacity style={styles.loginBtn} onPress={this.attemptLogin}>
+          <Text style={styles.btnText}>LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
           onPress={() => navigation.navigate('Register')}
-        />
+        >
+          <Text style={styles.btnText}>REGISTER</Text>
+        </TouchableOpacity>
       </View>
     );
   }
