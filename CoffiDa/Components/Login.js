@@ -48,7 +48,6 @@ export default class Login extends Component {
         authToken: token,
         id: userId,
       });
-      console.log(`authToken: ${token}`);
     } catch (error) {
       console.log(`error: ${error}`);
       alert(error);
@@ -64,7 +63,7 @@ export default class Login extends Component {
           style={styles.centerImage}
           source={require('../coffee_icon.png')}
         />
-        <Text style={styles.title}>CoffiDa</Text>
+        <Text style={styles.mainTitle}>CoffiDa</Text>
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}

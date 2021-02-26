@@ -1,5 +1,4 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable prefer-const */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
@@ -130,7 +129,7 @@ export default class ListItem extends Component {
         },
       });
       if (response.ok) {
-        let photoReviews = this.state.photoReviews;
+        const { photoReviews } = this.state;
         photoReviews.push(reviewId);
         this.setState({ photoReviews });
       }
@@ -140,7 +139,7 @@ export default class ListItem extends Component {
   };
 
   checkReviewhasPhoto() {
-    let reviewIds = this.state.reviewIds;
+    const { reviewIds } = this.state;
     reviewIds.forEach((review) => {
       this.checkForPhoto(review);
     });

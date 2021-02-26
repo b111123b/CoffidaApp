@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
   Button,
   TextInput,
+  Image,
 } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import { Styles as styles } from './styles';
@@ -28,6 +30,8 @@ export default class User extends Component {
       firstName: '',
       lastName: '',
       displayMode: 'reviews',
+      reviewIds: [],
+      photoReviews: [],
     };
   }
 
@@ -148,94 +152,132 @@ export default class User extends Component {
     }
   };
 
+  checkForPhoto = async (reviewId) => {
+    const { route } = this.props;
+    const url = `http://10.0.2.2:3333/api/1.0.0/location/${route.params.itemId}/review/${reviewId}/photo`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': route.params.authToken,
+        },
+      });
+      if (response.ok) {
+        const { photoReviews } = this.state;
+        photoReviews.push(reviewId);
+        this.setState({ photoReviews });
+      }
+    } catch (error) {
+      console.log(`error: ${error}`);
+    }
+  };
+
+  checkReviewhasPhoto() {
+    const { reviewIds } = this.state;
+    reviewIds.forEach((review) => {
+      this.checkForPhoto(review);
+    });
+  }
+
+  openReviewPage(item) {
+    this.props.navigation.navigate('Review', {
+      authToken: this.state.authToken,
+      location_id: item.location.location_id,
+      editReview: true,
+      review: item.review,
+      review_id: item.review.review_id,
+    });
+  }
+
   render() {
     const { user } = this.state;
     const { reviews } = user;
     const locations = user.favourite_locations;
     const likedReviews = user.liked_reviews;
 
+    const editButton = (
+      <TouchableOpacity onPress={this.onPressEditButton}>
+        <Image style={styles.image} source={require('../edit_icon.png')} />
+      </TouchableOpacity>
+    );
+
+    const updateDetails = (
+      <Button
+        color="#a85219"
+        title="save changes"
+        onPress={this.updateDetails}
+      />
+    );
+
     const viewDetails = (
-      <View>
-        <Text style={styles.title}>{user.first_name} </Text>
-        <Text style={styles.subTitle}>{user.last_name}</Text>
-        <Text style={styles.subTitle}>{user.email}</Text>
+      <View style={styles.itemContainer}>
+        <View>
+          <Text style={styles.userTitle}>{user.first_name} </Text>
+          <Text style={styles.userDetail}>{user.last_name}</Text>
+          <Text style={styles.userDetail}>{user.email}</Text>
+        </View>
+        <View style={styles.userIcon}>{editButton}</View>
       </View>
     );
 
     const editDetails = (
-      <View>
-        <TextInput
-          placeholder="First Name"
-          onChangeText={this.handleFirstNameChange}
-          value={this.state.firstName}
-        />
-        <TextInput
-          placeholder="Last Name"
-          onChangeText={this.handleLastNameChange}
-          value={this.state.lastName}
-        />
-        <TextInput
-          placeholder="Email"
-          onChangeText={this.handleEmailChange}
-          value={this.state.email}
-        />
-        <TextInput
-          placeholder="Password"
-          onChangeText={this.handlePasswordChange}
-          value={this.state.password}
-        />
+      <View styles={styles.container}>
+        <View>
+          <TextInput
+            placeholder="First Name"
+            onChangeText={this.handleFirstNameChange}
+            value={this.state.firstName}
+          />
+          <TextInput
+            placeholder="Last Name"
+            onChangeText={this.handleLastNameChange}
+            value={this.state.lastName}
+          />
+          <TextInput
+            placeholder="Email"
+            onChangeText={this.handleEmailChange}
+            value={this.state.email}
+          />
+          <TextInput
+            placeholder="Password"
+            onChangeText={this.handlePasswordChange}
+            value={this.state.password}
+          />
+        </View>
+        {updateDetails}
       </View>
-    );
-
-    const editButton = (
-      <Button
-        title={this.state.editable ? 'Save changes' : 'Edit'}
-        onPress={
-          this.state.editable ? this.updateDetails : this.onPressEditButton
-        }
-      />
     );
 
     const renderReview = ({ item }) => (
       <TouchableOpacity
         style={styles.item}
-        onPress={() =>
-          this.props.navigation.navigate('Review', {
-            authToken: this.state.authToken,
-            location_id: item.location.location_id,
-            editReview: true,
-            review: item.review,
-            review_id: item.review.review_id,
-          })
+        onPress={
+          this.state.displayMode === 'reviews'
+            ? () => this.openReviewPage(item)
+            : null
         }
       >
-        <Text style={styles.title}>{item.location.location_name} </Text>
+        <Text style={styles.itemTitle}>{item.location.location_name} </Text>
         <Text style={styles.subTitle}>
-          Overall Score: {item.review.overall_rating}{' '}
+          Overall Score: {item.review.overall_rating}
         </Text>
         <Text style={styles.subTitle}>
-          Quality: {item.review.quality_rating}{' '}
+          Quality: {item.review.quality_rating}
         </Text>
         <Text style={styles.subTitle}>
-          Price rating: {item.review.price_rating}{' '}
+          Price rating: {item.review.price_rating}
         </Text>
         <Text style={styles.subTitle}>
-          Cleanliness Rating: {item.review.clenliness_rating}{' '}
+          Cleanliness Rating: {item.review.clenliness_rating}
         </Text>
         <Text style={styles.subTitle}>{item.review.review_body} </Text>
       </TouchableOpacity>
     );
 
     const renderLocation = ({ item }) => (
-      <TouchableOpacity
-        style={styles.item}
-        // onPress={() => this.props.navigation.navigate('Item',{
-        //         item: item,
-        //         authToken: this.state.authToken
-        //     })
-        // }
-      >
-        <Text style={styles.title}>{item.location_name}</Text>
+      <TouchableOpacity style={styles.item}>
+        <Text style={styles.itemTitle}>{item.location_name}</Text>
         <Text style={styles.subTitle}>Locations: {item.location_town}</Text>
         <Text style={styles.subTitle}>Rating: {item.avg_overall_rating}</Text>
         <Text style={styles.subTitle}>Price: {item.avg_price_rating}</Text>
@@ -258,19 +300,39 @@ export default class User extends Component {
       />
     );
 
+    const listRow = (
+      <View style={styles.itemContainer}>
+        <View style={{ width: '33%' }}>
+          <Button
+            color="#a85219"
+            title="Reviews"
+            onPress={this.onPressReviewButton}
+          />
+        </View>
+        <View style={{ width: '34%' }}>
+          <Button
+            color="#a85219"
+            title="Locations"
+            onPress={this.onPressLocationButton}
+          />
+        </View>
+        <View style={{ width: '33%' }}>
+          <Button
+            color="#a85219"
+            title="liked"
+            onPress={this.onPressLikedButton}
+          />
+        </View>
+      </View>
+    );
+
     return (
       <SafeAreaView style={styles.container}>
         {this.state.editable ? editDetails : viewDetails}
-        {editButton}
-        <Button title="Logout" onPress={this.logout} />
-        <Button title="Reviews" onPress={this.onPressReviewButton} />
-        <Button
-          title="Favourtied locations"
-          onPress={this.onPressLocationButton}
-        />
-        <Button title="liked reviews" onPress={this.onPressLikedButton} />
+        {listRow}
         <Text style={styles.title}>{this.state.displayMode}</Text>
         {this.state.displayMode === 'locations' ? locationList : reviewList}
+        <Button title="Logout" color="#a85219" onPress={this.logout} />
       </SafeAreaView>
     );
   }

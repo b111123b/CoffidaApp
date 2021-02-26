@@ -1,16 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable import/prefer-default-export */
 import { StyleSheet } from 'react-native';
-/* --windsor-tan: #a85219;
---air-superiority-blue: #80a1c1;
---medium-champagne: #eee3ab;
---bone: #d9cfc1;
---bistre: #2b2118; */
 
 const tan = '#a85219';
-const blue = '#80a1c1';
 const bone = '#d9cfc1';
-const champagne = '#eee3ab';
 const bistre = '#2b2118';
 const white = '#ffffff';
 
@@ -21,31 +14,69 @@ export const Styles = StyleSheet.create({
     marginHorizontal: 16,
     backgroundColor: bone,
   },
+  mainTitle: {
+    fontSize: 32,
+    color: bistre,
+    marginBottom: 20,
+    alignSelf: 'center',
+    fontFamily: 'WorkSans-Bold',
+  },
   title: {
     fontSize: 32,
     color: bistre,
-    alignSelf: 'center',
     marginBottom: 20,
+    marginLeft: 18,
+    fontFamily: 'WorkSans-Bold',
+  },
+  homeTitle: {
+    fontSize: 32,
+    color: bistre,
+    marginBottom: 20,
+    marginLeft: 36,
+    fontFamily: 'WorkSans-Bold',
+  },
+  userTitle: {
+    fontSize: 32,
+    color: bistre,
+    marginLeft: 18,
+    fontFamily: 'WorkSans-Bold',
   },
   itemTitle: {
     fontSize: 32,
     color: bistre,
     marginBottom: 20,
+    fontFamily: 'WorkSans-SemiBold',
   },
   itemIcon: {
     flex: 2,
   },
+  userIcon: {
+    flex: 2,
+    marginBottom: 16,
+    marginRight: 16,
+  },
   subTitle: {
     fontSize: 18,
+    fontFamily: 'WorkSans-Medium',
+  },
+  userDetail: {
+    fontSize: 18,
+    marginLeft: 18,
+    marginBottom: 5,
+    fontFamily: 'WorkSans-Medium',
   },
   locationDetails: {
     fontSize: 18,
     marginLeft: 18,
+    fontFamily: 'WorkSans-Medium',
   },
   container: {
     backgroundColor: white,
     flex: 1,
     width: '100%',
+  },
+  cardBackground: {
+    backgroundColor: '#eee3ab',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -123,8 +154,8 @@ export const Styles = StyleSheet.create({
     backgroundColor: tan,
   },
   reviewBtn: {
-    width: '70%',
-    borderRadius: 25,
+    width: '100%',
+    // borderRadius: 25,
     height: 50,
     alignItems: 'center',
     alignSelf: 'center',
@@ -135,6 +166,8 @@ export const Styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 18,
+    color: white,
+    fontFamily: 'WorkSans-Medium',
   },
   reviewImage: {
     height: 100,

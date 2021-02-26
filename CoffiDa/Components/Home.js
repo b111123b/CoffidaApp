@@ -182,7 +182,7 @@ export default class Home extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Coffee Shops</Text>
+        <Text style={styles.homeTitle}>Coffee Shops</Text>
         <FlatList
           data={items}
           renderItem={renderItem}
