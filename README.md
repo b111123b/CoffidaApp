@@ -1,6 +1,6 @@
 # Coffida
 
-# Running the App in an Emulator
+Running the App in an Emulator:
 
 1. Start android studio
 2. Go to AVD manager
