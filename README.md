@@ -11,4 +11,4 @@ This App relies on the [CoffidaServer](https://github.com/ash-williams/coffida_s
 
 I used the airbnb style guide: https://airbnb.io/javascript/react/
 
-# [Github Repo Link](https://github.com/b111123b/MobileDevCSWRK)
+Github Repo Link: https://github.com/b111123b/MobileDevCSWRK
