@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable global-require */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
@@ -7,6 +8,24 @@ import React, { Component } from 'react';
 import { View, TextInput, Text, Image, TouchableOpacity } from 'react-native';
 import { Styles as styles } from './styles';
 
+const forbiddenCharecters = [
+  '#',
+  '$',
+  '%',
+  '^',
+  '&',
+  '*',
+  '(',
+  ')',
+  '+',
+  '=',
+  '<',
+  '>',
+  '?',
+  '/',
+  '~',
+  '`',
+];
 export default class Register extends Component {
   constructor(props) {
     super(props);
@@ -20,9 +39,29 @@ export default class Register extends Component {
     };
   }
 
+  // eslint-disable-next-line react/sort-comp
+  checkforforbiddenCharecters() {
+    let abort = false;
+    const { email, firstName, lastName } = this.state;
+    forbiddenCharecters.forEach((charecter) => {
+      if (
+        email.includes(charecter) === true ||
+        lastName.includes(charecter) === true ||
+        firstName.includes(charecter) === true
+      ) {
+        abort = true;
+      }
+    });
+    return abort;
+  }
+
   // eslint-disable-next-line consistent-return
   attemptRegister = async () => {
     const { email, password, firstName, lastName, passwordRepeat } = this.state;
+    const charecterCheck = this.checkforforbiddenCharecters();
+    if (charecterCheck === true) {
+      return alert('using forbiddenCharecters');
+    }
     if (password !== passwordRepeat) {
       return alert('Passwords do not match');
     }
